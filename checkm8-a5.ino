@@ -1,6 +1,6 @@
 #include "Usb.h"
 
-#define A5_8942
+#define A5_8940 //This is for ipad2 (https://ipsw.me/iPad2,1/info)
 #include "constants.h"
 
 USB Usb;
@@ -36,6 +36,7 @@ void setup() {
   if(Usb.Init() == -1)
     Serial.println("usb init error");
   delay(200);
+  pinMode(6, OUTPUT);
 }
 
 void loop() {
@@ -65,6 +66,7 @@ void loop() {
         }
         return;
       }
+      Serial.print("Apple DFU found (vendorId: "); Serial.print(desc_buf.idVendor); Serial.print(", productId: "); Serial.print(desc_buf.idProduct); Serial.println(")");
       is_apple_dfu = true;
       serial_idx = desc_buf.iSerialNumber;
     }
@@ -72,6 +74,7 @@ void loop() {
     switch(checkm8_state)
     {
       case CHECKM8_INIT_RESET:
+        Serial.print("Starting.....");
         for(int i = 0; i < 3; i++)
         {
           digitalWrite(6, HIGH);
